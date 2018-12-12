@@ -37,9 +37,9 @@ if __name__ == "__main__":
                 else:
                     end_page -= int(ur["end_page"])
 
-            if ur["end_page"] and int(ur["end_page"]) > 0:
+            if None is ur["end_page"] or (ur["end_page"] and int(ur["end_page"]) > 0):
 
-                page += (start_page - 1)
+                page += start_page
                 while page <= end_page:
                     link = create_link(ur["url"], page)
                     item_list_data = scraper.scrap_item_list(link)
