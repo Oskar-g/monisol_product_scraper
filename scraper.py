@@ -35,6 +35,7 @@ class Scraper:
     def __get_item_data(self, item_page_code: bs.BeautifulSoup) -> dict:
         item = {'referencia': self.__get_item_reference(item_page_code),
                 'nombre': self.__get_item_name(item_page_code),
+                'precio': self.__get_item_price(item_page_code),
                 'imagen': self.__get_item_image(item_page_code),
                 'descripcion': self.__get_item_description(item_page_code)}
 
@@ -52,6 +53,12 @@ class Scraper:
         name = str(tag.get_text())
 
         return name
+
+    def __get_item_price(self, item_page_code: bs.BeautifulSoup) -> str:
+        tag = item_page_code.select_one('.price')
+        text = str(tag.get_text())
+        price = text.replace(" ", "").replace("\t", "").replace("€", "").replace(".", "")
+        return price.strip()
 
     def __get_item_image(self, item_page_code: bs.BeautifulSoup) -> str:
         tag = item_page_code.select_one('#image-main')

@@ -10,6 +10,7 @@ class Excel:
         self.col_names = [
             "referencia",
             "nombre",
+            "precio",
             "imagen",
             "descripcion",
         ]
