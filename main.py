@@ -24,10 +24,27 @@ if __name__ == "__main__":
     try:
         for ur in WEB_URLS:
             print('\nCargando categoría:', ur["category"])
-            for page in range(int(ur["pages"]) + 1):
-                link = create_link(ur["url"], page)
-                item_list_data = scraper.scrap_item_list(link)
-                xls.write_data(item_list_data)
+
+            page = 1
+            start_page = 0
+            end_page = int(ur["pages"])
+
+            if ur["start_page"] is not None:
+                start_page = int(ur["start_page"])
+            if ur["end_page"] is not None:
+                if ur["end_page"] == ur["start_page"]:
+                    end_page = int(ur["start_page"])
+                else:
+                    end_page -= int(ur["end_page"])
+
+            if ur["end_page"] and int(ur["end_page"]) > 0:
+
+                page += (start_page - 1)
+                while page <= end_page:
+                    link = create_link(ur["url"], page)
+                    item_list_data = scraper.scrap_item_list(link)
+                    xls.write_data(item_list_data)
+                    page += 1
 
     except Exception as e:
         print("Error en el proceso", e)

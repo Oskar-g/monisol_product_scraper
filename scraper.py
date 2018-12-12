@@ -16,8 +16,6 @@ class Scraper:
         web_code = page.read()
         return bs.BeautifulSoup(web_code, 'lxml')
 
-    #    def get_web_data(self):
-
     def scrap_item_list(self, url: str) -> list:
         print("\nScrapeando página:", url)
         item_list_data = []
@@ -42,32 +40,64 @@ class Scraper:
         return item
 
     def __get_item_reference(self, item_page_code: bs.BeautifulSoup) -> str:
-        tag = item_page_code.select_one('div.product-name p')
-        text = str(tag.get_text())
-        reference = text.replace("Código:", "")
+        reference = ""
+
+        if item_page_code.select_one('p.sku'):
+            tag = item_page_code.select_one('p.sku')
+            text = str(tag.get_text())
+            reference = text.strip()
+
+        elif item_page_code.select_one('div.product-name p'):
+            tag = item_page_code.select_one('div.product-name p')
+            text = str(tag.get_text())
+            reference = text.replace("Código:", "")
+
+        print("Referencia captada:", reference)
 
         return reference
 
     def __get_item_name(self, item_page_code: bs.BeautifulSoup) -> str:
         tag = item_page_code.select_one('.h1')
-        name = str(tag.get_text())
+
+        name = ""
+        if tag and tag.get_text():
+            name = str(tag.get_text())
+
+        print("Nombre captado:", name)
 
         return name
 
     def __get_item_price(self, item_page_code: bs.BeautifulSoup) -> str:
-        tag = item_page_code.select_one('.price')
-        text = str(tag.get_text())
-        price = text.replace(" ", "").replace("\t", "").replace("€", "").replace(".", "")
-        return price.strip()
+        price = ""
+
+        tag = item_page_code.select_one('.price-box .price')
+        if tag and tag.get_text():
+            text = str(tag.get_text())
+            price = text.replace(" ", "").replace("\t", "").replace("€", "").replace(".", "").strip()
+
+        print("Precio captado:", price)
+
+        return price
 
     def __get_item_image(self, item_page_code: bs.BeautifulSoup) -> str:
         tag = item_page_code.select_one('#image-main')
-        image = str(tag.get('src'))
+
+        image = ""
+        if tag and tag.get('src'):
+            image = str(tag.get('src'))
+
+        print("Imágen captada:", image)
 
         return image
 
     def __get_item_description(self, item_page_code: bs.BeautifulSoup) -> str:
         tag = item_page_code.select_one('div.short-description')
-        text = str(tag.get_text())
-        description = text.strip()
+
+        description = ""
+        if tag and tag.get_text():
+            text = str(tag.get_text())
+            description = text.strip()
+
+        print("Descripción captada:", description)
+
         return description
