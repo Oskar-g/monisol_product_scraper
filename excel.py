@@ -1,5 +1,5 @@
 import xlsxwriter
-from constants import XLS_FILE, bcolors
+from constants import XLS_FILE
 
 
 class Excel:
